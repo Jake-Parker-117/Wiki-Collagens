@@ -3,22 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collagen Finder</title>
+    <title>Wiki Collagens</title>
     <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
 </head>
-<body>
-    <h1> {{ title }} </h1>
-    <p>Number of sequences uploaded: {{ seqs }}</p>
-    <p>Number of sequences with collagen sequences (min length 27 amino acids): {{ collagen_num }}</p>
-    
-    <ul>
-        <li><a href="{{ url_for('outputs', filename='col.txt') }}">View collagen txt file</a></li>
-        <li><a href="{{ url_for('outputs', filename='col_html.html') }}">View collagens highlighted in an html file</a></li>
-    </ul>
 
-    <form action="/Collagens" method="POST" enctype="multipart/form-data">
-        <input type="file" name="fasta_seqs" placeholder="Insert fasta file here!" accept=".fasta,.fa,.faa,.txt" />
-        <button type="submit">Find Collagens</button>
-    </form>
+<body>
+
+    <header>
+        <div class="header_brand">
+            <img src="{{url_for('static', filename='images/logo.jpg') }}" alt="Wiki Collagens Logo">
+            <h4>Wiki<br/>Collagens</h4>
+        </div>
+        <nav>    
+            <ul class="nav_list">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page_header"> {{ title }} </h1>
+        <p class="intro">
+            Number of sequences uploaded: {{ seqs }}<br />
+            Number of sequences with collagen sequences (min length 27 amino acids): {{ collagen_num }}
+        </p>
+        <div class="container">
+            <h2>Download Files</h2>
+            <ol class="results">
+                <li class="results"><a href="{{ url_for('sessions', user_id=user_id, filename='col.txt') }}" download="COL_domain_containing_sequences.txt">Download COL domain containing sequences</a></li>
+                <li class="results"><a href="{{ url_for('sessions', user_id=user_id, filename='col_html.html') }}" download="COL_domain_containing_sequences_Highlighted.html">Download highlighted COL domains</a></li>
+                <li class="results"><a href="{{ url_for('sessions', user_id=user_id, filename='col_table.txt') }}" download="COL_domain_containing_sequences_Statistics.txt">Download statistics about COL domain interruptions and GXY prevelance</a></li>
+            </ol>
+        </div>
+        <div class="container">
+            <h2>View Files</h2>
+            <ol class="results">
+                <li class="results"><a href="{{ url_for('sessions', user_id=user_id, filename='col.txt') }}" target="_blank">View COL domain containing sequences</a></li>
+                <li class="results"><a href="{{ url_for('sessions', user_id=user_id, filename='col_html.html') }}" target="_blank">View highlighted COL domains</a></li>
+                <li class="results"><a href="{{ url_for('sessions', user_id=user_id, filename='col_table.txt') }}" target="_blank">View statistics about COL domain interruptions and GXY prevelance</a></li>
+            </ol>
+        </div>
+            <p class="intro">
+                You will lose access to these files within 1 hour of submitting.<br />
+                Please download any files you wish to keep.<br /><br />
+                Any gap characters (eg. -, * or ~) will have been removed from the sequences during processing.<br /><br />
+            </p>
+    </main>
+
+    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
 </body>
 </html>

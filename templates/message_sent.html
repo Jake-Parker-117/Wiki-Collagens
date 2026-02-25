@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Collagens</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    
+    <header>
+        <div class="header_brand">
+            <img src="{{url_for('static', filename='images/logo.jpg') }}" alt="Wiki Collagens Logo">
+            <h4>Wiki<br/>Collagens</h4>
+        </div>
+        <nav>    
+            <ul class="nav_list">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+    <form action="/">
+        <div class="text_container">           
+            <h2 class="container_header">Contact Form</h2>
+            <p class="intro">Your message has been sent<br/>
+                Please allow up to 5 working days for a response.
+            </p>
+            <button type="submit">Home Page</button>
+        </div>
+    </form>
+    </main>
+
+    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+</body>
+</html>

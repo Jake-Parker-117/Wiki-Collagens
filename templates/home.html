@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Collagens</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="header_brand">
+            <img src="{{url_for('static', filename='images/logo.jpg') }}" alt="Wiki Collagens Logo">
+            <h4>Wiki<br/>Collagens</h4>
+        </div>
+        <nav>    
+            <ul class="nav_list">
+                <li><a aria-current="page">Home</a></li>
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        
+        <div class="intro">
+            <h1 class="page_header">Automatic COL domain detector</h1>
+            <p class="intro">
+                Wiki Collagens is a tool which, given fasta formatted protein sequences, will identify COL domain containing proteins 
+                and highlight their COL domains along with any interuptions.<br />
+            </p>
+        </div>
+        
+        <hr>
+        
+        <form action="/collagens/file_input" method="POST" enctype="multipart/form-data">
+            <div class="container">           
+                <h2 class="container_header_file_input">File Input</h2>   
+                <label for="fasta_File">Fasta file input:</label>
+                <input type="file" name="fasta_seqs" accept=".fasta,.fa,.faa,.txt" id="fasta_File" required>
+                        
+                <label for="trip_len1">Minimum COL domain triplet length (in triplets):</label>
+                <input type="number" name="col_len_min" title="Default = 10 triplets (ie. 30 amino acids)" value="10" id="trip_len1" required>                            
+                <label for="Max_GNG1">Maximum GNG interuption length:</label>
+                <input type="number" name="interruption_max" title="Default = 12 amino acids" value="12" id="Max_GNG1" required>
+                        
+                <button type="submit">Find COL domains</button>
+            </div>
+        </form>
+        
+        <hr>
+        
+        <form action="/collagens/text_input" method="POST">
+            <div class="container">
+                <h2 class="container_header">Text Input</h2>
+                <p class="text_input">For large fasta files, please use the file input <br/> (450,000 Character limit)</p>
+                
+                <label for="fasta_paste">Fasta sequences paste input:</label>
+                <textarea name="fasta_text" maxlength="450000" cols="60" rows="8" title="Fasta sequences input" placeholder="Paste fasta sequences here!" id="fasta_paste" required></textarea>
+                
+                <label for="trip_len2">Minimum COL domain triplet length (in triplets):</label>
+                <input type="number" name="col_len_min" title="Default = 10 triplets (ie. 30 amino acids)" value="10" id="trip_len2" required>
+                            
+                <label for="Max_GNG2">Maximum GNG interuption length:</label>
+                <input type="number" name="interruption_max" title="Default = 12 amino acids" value="12" id="Max_GNG2" required>
+                            
+                <button type="submit">Find COL domains</button>
+            </div>
+        </form>
+        <p class ="intro"><br />Please separate fasta headers and sequences with new line characters.<br /></p>
+    
+    </main>
+    
+    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Collagens</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="header_brand">
+            <h1 class="wiki">Wiki</h1>
+            <h1 class="collagens">Collagens</h1>
+        </div>
+        <nav>    
+            <ul class="nav_list">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
+                <li><a a aria-current="page">Citation</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="text_container">
+            <h2 class="container_header">Citation for the resource:</h2>
+            <p class="intro">
+                <br/>A Citation will be available <a href="/home">here</a> after publication.
+            </p>
+        </div>
+    </main>
+
+    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+</body>
+</html>

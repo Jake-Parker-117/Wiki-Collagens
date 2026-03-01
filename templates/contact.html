@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Collagens</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="header_brand">
+            <h1 class="wiki">Wiki</h1>
+            <h1 class="collagens">Collagens</h1>
+        </div>
+        <nav>    
+            <ul class="nav_list">
+                <li><a href="{{ url_for('home') }}"">Home</a></li>
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a aria-current="page">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <form action="{{ url_for('contact')}}" method="POST">
+            <div class="container">           
+                    <h2 class="page_header">Contact Form</h2>
+                    <br/>
+                    <label for="name">Your name:</label>
+                    <input type="text" name="contact_name" id="name" placeholder="John Doe" required>
+                    
+                    <label for="email">Your email:</label>
+                    <input type="email" name="contact_email" id="email" placeholder="your@email.com" required>
+
+                    <label for="subject">The subject of your message:</label>            
+                    <input type="text" name="contact_subject" id="subject" placeholder="Subject" required>
+                    
+                    <label for="message">Your message:</label>
+                    <textarea name="contact_message" cols="100" rows="10" id="message" placeholder="..." required></textarea>
+
+                    <button type="submit">Send Message</button>
+                </div>
+        </form>
+    </main>
+    
+    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+</body>
+</html>

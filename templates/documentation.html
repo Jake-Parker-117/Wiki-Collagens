@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Collagens</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="header_brand">
+            <h1 class="wiki">Wiki</h1>
+            <h1 class="collagens">Collagens</h1>
+        </div>
+        <nav>    
+            <ul class="nav_list">
+                <li><a href="{{ url_for('home') }}"">Home</a></li>
+                <li><a aria-current="page">Documentation</a></li>
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="intro">
+            <h1 class="page_header">What is Wiki Collagens?</h1>
+            <p class="intro">Wiki Collagens is a free and open source webapp which can analyse COL domains in given fasta formatted protein sequences.</p>
+        </div>
+        <div class="text_container">
+            <h2 class="container_header">Tool inputs and outputs:</h2>
+            <p class="container_documentation">
+                <br/>Wiki Collagens takes .fasta, .fa, .faa, and .txt files. 
+                The parameters of the tool which can be altered include the minimum length for a COL domain in triplets (default=10) and the maximum length 
+                of a GNG interruption (default=12, ie. G3-12G).<br/>
+                This tool provides 3 outputs: a flattened fasta .txt file of the COL domain containing proteins, an html file with the same protein 
+                sequences and highlighted COL domains and interuptions and finally a .txt file containing statistics about interuption and GXY 
+                prevalence.
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="text_container">
+            <h2 class="container_header">Highlighted output explanation:</h2>
+            <p class="container_documentation">
+                <br/>Non COL regions are not highlighted, <span class="COL">COL domains</span> are highlighted in yellow, <span class="GXG">GXG</span> interruptions are highlighted in green,
+                <span class="GNG">GNG</span> interruptions are highlighted in cyan and <span class="GGG">GGG</span> repeats are coloured red.
+                <br/><br/>Example highlighted sequence: <span class="NC">DSRSTEKTT</span><span class="COL">GPTGLKGESGTA</span><span class="GNG">TST</span><span class="COL">GTSGPAGLP</span><span class="GXG">GY</span><span class="COL">GVKGHQ</span><span class="GGG">GGGGGG</span>
+            </p>
+        </div>
+
+        <hr>
+        
+        <div class="text_container">
+            <h2 class="container_header">Collagen detection method and disclaimer:</h2>
+            <p class="container_documentation">
+                <br/>The tool analyses sequences based on the amino acid sequence and does not take homology or probable helix formation into 
+                account. Rather it uses regular expressions to identify the repeating GXY amino acid patterns within COL domains. Therefore 
+                cases such as short repeating COL domains interspersed with short interuptons are highlighted as such rather than continual 
+                COL domains due to the sequence based nature of the tool and the ambiguity of such cases.<br/>
+                <br/>
+            </p>
+            <p class="disclaimer">Disclaimers:</p>
+            <ol class="documentation">
+                <li class="documentation">This tool is not designed to find helix forming collagens, collagen-like proteins or true COL domains but rather to recognise COL domain patterns in amino acid sequeneces.</li>
+                <li class="documentation">Any gap characters (eg. -, * or ~) used to denote unknown amino acids will be removed from the sequences during processing.</li>
+                <li class="documentation">If fasta headers and sequences are not separated by a newline character (\n) the program will run on the header aswell as the sequence. It will also provide warnings in the output files for non-separated sequences, but will still provide a correct output.</li>
+            </ol>
+        </div>
+    </main>
+    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+</body>
+</html>

@@ -1,47 +1,117 @@
-from flask import Flask, render_template, request, send_from_directory
-from Collagens import fastaread, get_cols, label_cols
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
+from flask_mail import Mail, Message
+from Collagens import get_cols, label_cols, cleanup_files
 from waitress import serve
-from werkzeug.utils import secure_filename
-import os
+from werkzeug.exceptions import HTTPException, BadRequest, NotFound
+from dotenv import load_dotenv
+import os, uuid, time, shutil
+
+load_dotenv()
 
 app = Flask(__name__)
+cleanup_files("sessions", 1)
 
 @app.route('/')
-@app.route('/index')
-def index():
-    return render_template('index.html')
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
-UPLOAD_DIR = "uploads"
-OUTPUT_DIR = "outputs"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+@app.route('/documentation')
+def documentation():
+    return render_template('documentation.html')
 
-@app.route("/Collagens", methods=["POST"])
-def collagens():
-    #if "fasta_seqs" not in request.files:
-        #return "Please upload a file"
+@app.route('/citation')
+def citation():
+    return render_template('citation.html')
+
+#Route for file inputs which runs all the functions given the inputs and then redirects to a different link to show the files depending on user id
+@app.route("/collagens/file_input", methods=["POST"])
+def collagens_file():
+
+    #creating random user id and creating a working directory within the sessions folder labeled as the request_id (user id)  
+    request_id = str(uuid.uuid4())
+    workdir = os.path.join("sessions", request_id)
+    os.makedirs(workdir)
     
+    #requesting input file, creating individual file within current workdir within sessions and the assigned random user id
+    cols_file = request.files['fasta_seqs']
+    input_fasta = os.path.join(workdir, "input.fasta")
+    cols_file.save(input_fasta) #save function effienctly saves the file by loading it into the other file in chuncks of 16Kb
     
-    cols = request.files['fasta_seqs']    
-    input_fasta = os.path.join(UPLOAD_DIR, "input.fasta")
-    cols.save(input_fasta)
+    #getting all inputs from web page and creating output files in working directory. Handling input errors for integers:
+    try:
+        min_col = int(request.form['col_len_min'])
+        max_inter = int(request.form['interruption_max'])
+    except(KeyError, ValueError): 
+        raise BadRequest(description="Incorrect input. Please use positive integers as inputs regarding COL domain length or interuption length.")
     
-    col_txt = os.path.join(OUTPUT_DIR, "col.txt")
-    col_html = os.path.join(OUTPUT_DIR, "col_html.html")
+    col_txt = os.path.join(workdir, "col.txt")
+    col_html = os.path.join(workdir, "col_html.html")
+    col_table = os.path.join(workdir, "col_table.txt")
     
-    fastaread(input_fasta, "flat.fasta")
-    get_cols("flat.fasta", col_txt)
-    label_cols(col_txt, col_html)
+    get_cols(input_fasta, col_txt, min_col)
+    label_cols(col_txt, col_html, col_table, max_inter)
     
-    #counting  sequences in origninal fasta file
-    with open("flat.fasta") as yfile:
-        seq_num = 0
-        for yline in yfile:
-            if yline.startswith(">"):
-                seq_num += 1
+    return redirect(url_for("results", user_id=request_id))
+
+
+#Route for file inputs which runs all the functions given the inputs and then redirects to a different link to show the files depending on user id
+@app.route("/collagens/text_input", methods=["POST"])
+def collagens_txt():
+
+    #creating random user id and creating a working directory within the sessions folder labeled as the request_id (user id)  
+    request_id = str(uuid.uuid4())
+    workdir = os.path.join("sessions", request_id)
+    os.makedirs(workdir)
     
-    #counting  sequences that are over the 27AA length requirement (ie. are in the col.txt file)
-    with open(col_txt) as xfile:
+    #requesting input text and validating it
+    cols_text_input = request.form['fasta_text']
+    input_fasta = os.path.join(workdir, "input.fasta")
+    with open(input_fasta, 'w', encoding="utf-8") as f:
+        f.write(cols_text_input)
+
+    #getting numerical inputs and handling input errors:
+    try:
+        min_col = int(request.form['col_len_min'])
+        max_inter = int(request.form['interruption_max'])
+    except(ValueError): 
+        raise BadRequest(description="Incorrect input. Please use positive integers as inputs regarding minimum COL domain length and maximuum interuption length.")
+    except(KeyError): 
+        raise BadRequest(description="Please provide inputs for minimum COL domain length and maximum interuption length.")
+    
+    #creating an input.fasta file for counting inputted sequences later and creating all the other files in the working directory
+    col_txt = os.path.join(workdir, "col.txt")
+    col_html = os.path.join(workdir, "col_html.html")
+    col_table = os.path.join(workdir, "col_table.txt")
+    
+    get_cols(input_fasta, col_txt, min_col)
+    label_cols(col_txt, col_html, col_table, max_inter)
+        
+    return redirect(url_for("results", user_id=request_id))
+
+
+
+#setting up user isolated routes per user id so that the results page url isn't the same for 2 people
+@app.route("/results/<user_id>", methods=["GET"])
+def results(user_id):
+    
+    #getting the working directory and files for counting
+    workdir = os.path.join("sessions", user_id)
+    input_fasta = os.path.join(workdir, "input.fasta")
+    col_txt = os.path.join(workdir, "col.txt")
+    
+    #counting sequences in origninal fasta file and verifying that the file still exists
+    try:
+        with open(input_fasta, 'r', encoding='utf-8') as yfile:
+            seq_num = 0
+            for yline in yfile:
+                if yline.startswith(">"):
+                    seq_num += 1
+    except:
+        raise NotFound(description="The session you are trying to access has been removed. Please run your query again.")
+    
+    #counting sequences that are over the 30AA length requirement (ie. are in the col.txt file)
+    with open(col_txt, 'r', encoding='utf-8') as xfile:
         col_num = 0
         for line in xfile:
             if line.startswith(">"):
@@ -49,14 +119,82 @@ def collagens():
     
     return render_template(
         "collagens.html",
-        title="Collagens Found!",
         seqs=seq_num,
-        collagen_num=col_num
+        collagen_num=col_num,
+        user_id=user_id,
         )
 
-@app.route("/outputs/<path:filename>")
-def outputs(filename):
-    return send_from_directory("outputs", filename)
 
-if __name__ == "__main__":
-    serve(app, host="0.0.0.0", port=8000)
+
+#setting up a route for each user to view and download their files
+@app.route("/sessions/<user_id>/<filename>", methods=["GET"])
+def sessions(user_id, filename):
+    return send_from_directory(os.path.join("sessions", user_id), filename)
+
+
+
+#Error handling
+@app.errorhandler(HTTPException)
+def handle_exeption(e):
+    return render_template("errors.html",
+                            e_title=e.name,
+                            e_msg=e.description,
+                            ), e.code #returns the error code to terminal aswell as rendering to template
+
+#Configuring email sending system thru env
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+#creating mail class after configuration of Mail
+mail = Mail(app)
+
+@app.route('/message_sent')
+def message_sent():
+    return render_template('message_sent.html')
+
+#Creating mail contact form usability
+@app.route('/contact', methods=['GET','POST'])
+def contact():
+    if request.method == 'POST':
+        #requesting details from the contact form
+        name = request.form.get('contact_name')
+        email = request.form.get('contact_email')
+        subject = request.form.get('contact_subject')
+        message = request.form.get('contact_message')
+        recipient = os.getenv('RECIPIENT')
+
+        #creating message
+        msg = Message(
+            subject=f"Wiki Collagens contact form submission",
+            recipients=[recipient],
+            body=f"""
+            New message from contact form:
+
+            Name: {name}
+            Subject: {subject}
+            email: {email}
+
+            {message}
+            """,
+            reply_to=email
+        )
+
+        #sending email and debugging if not:
+        try: 
+            mail.send(msg)
+            return redirect(url_for('message_sent'))
+        except Exception as e:
+            raise e
+    return render_template('contact.html')
+
+
+
+if __name__ == '__main__':
+    # Run Flask development server
+    app.run(debug=True, host='127.0.0.1', port=5000)
+
+    #Run Flask production server:
+    #serve(app, host=("0.0.0.0"), port=8000)

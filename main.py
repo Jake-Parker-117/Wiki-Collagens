@@ -194,7 +194,7 @@ def contact():
 
 if __name__ == '__main__':
     # Run Flask development server
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
     #Run Flask production server:
     #serve(app, host=("0.0.0.0"), port=8000)

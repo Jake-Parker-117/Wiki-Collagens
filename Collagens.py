@@ -6,15 +6,14 @@ load_dotenv()
 
 def get_cols(fasta_file, col_txt, min_col_length=10):
     """
-    Opens a fasta file, filters for collagen containing proteins and adds them to a .txt file
+    Opens a fasta file, filters for collagen containing proteins and adds them to a .txt file. Deals with ambiguous chars within sequence by replacing them 
+    with an X and deals with gap (-) and terminal (*) chars by removing them from the sequence.
 
     Args: 
     fasta_file = Inputted fasta file
     col_txt = text file outputted containing COL domain proteins
     min_col_length = minimum length of COL domains permitted, measured in GXY triplets (ie. 10 triplets = 30 amino acids)
     """
-    #Efficiency testing
-    t1 = time.perf_counter()
 
     #Using regex to find collagen containing sequences and creates a txt file of all the COL domain containing proteins
     header = None
@@ -22,20 +21,21 @@ def get_cols(fasta_file, col_txt, min_col_length=10):
     sequence = ""
     pattern = re.compile(rf'(G[A-Z][A-Z]){{{min_col_length},}}')
     clean1 = re.compile(r'\n|\r|\t')
-    clean2 = re.compile(r'\s|\-|\*|\~|\.') #compiling regexes for time efficiency
-    prog = 0 #progress tracking
+    clean2 = re.compile(r'\-|\*')
+    replaceX = re.compile(r'\s|\~|\.') #compiling regexes for time efficiency
 
     with open(fasta_file, 'r', encoding='utf-8') as f:
         with open(col_txt, 'w', encoding='utf-8') as output:
             for line in f:
-                line = clean1.sub("", line) #remove any special chars from line (acts like a better .strip)
+                line = clean1.sub("", line) #remove any special chars within or end of lines
                 if not line: #skip empty lines
                     continue
                 if line.startswith(">"):
                     if header is not None:
                         sequence = "".join(new_line)
                         if len(new_line)<1: #checking if the header and sequence have been separated
-                            header = clean2.sub("", header.upper()) #removing all gap and special chars from header if header contains sequence
+                            header = clean2.sub("", header.upper()) #removing gap and terminal chars from header if header contains sequence
+                            header = replaceX.sub("X", header) #replacing ambiguous chars with "X"
                             if pattern.search(header):
                                 output.write(f"This header and sequence were not separated\n{header}\n\n") #Saves the header/sequence the pattern is found
                         
@@ -47,7 +47,8 @@ def get_cols(fasta_file, col_txt, min_col_length=10):
                     else:
                         header = line #sets 1st header
                 else:
-                    line = clean2.sub("", line.upper())
+                    line = clean2.sub("", line.upper()) #removing gap and terminal chars
+                    line = replaceX.sub("X", line) #replacing ambiguous amino acid chars with "X"
                     new_line.append(line) #capturing sequence lines
 
             if header is not None: #capturing the last input
@@ -59,8 +60,6 @@ def get_cols(fasta_file, col_txt, min_col_length=10):
                 if len(new_line)>=1:
                     if pattern.search(sequence): #searches the combined lines for the pattern
                         output.write(f"{header}\n{sequence}\n\n")
-        t2 = time.perf_counter()
-        print(f"total time: {t2-t1}")
 
 
 def label_cols(col_file, hfile, table, num=12):
@@ -74,9 +73,7 @@ def label_cols(col_file, hfile, table, num=12):
     table = tsv file output containing statistics about GXY and interuption prevelance
     num = the maximum number of amino acids permitted to separate GXY repeats while still counting as a COL domain interuption
     """
-    #efficiency testing:
-    t1 = time.perf_counter()
-
+    
     #Using regex to identify collagen regions, marking them and then finding interuptions and marking those
     with open(col_file) as fin:
         with open(hfile, 'w', encoding='utf-8') as fout:
@@ -164,10 +161,6 @@ def label_cols(col_file, hfile, table, num=12):
             html += foot
             
             fout.write(html)
-
-            #efficiency testing:
-            t2 = time.perf_counter()
-            print(f"total time: {t2-t1}")
 
 def cleanup_files(folder="sessions", age_limit=3600):
     """

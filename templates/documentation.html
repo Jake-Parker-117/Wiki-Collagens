@@ -10,12 +10,12 @@
 <body>
     <header>
         <div class="header_brand">
-            <img src="{{url_for('static', filename='images/logo.jpg') }}" alt="Wiki Collagens Logo">
-            <h4>Wiki<br/>Collagens</h4>
+            <h1 class="wiki">Wiki</h1>
+            <h1 class="collagens">Collagens</h1>
         </div>
         <nav>    
             <ul class="nav_list">
-                <li><a href="{{ url_for('home') }}"">Home</a></li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a aria-current="page">Documentation</a></li>
                 <li><a href="{{ url_for('citation') }}">Citation</a></li>
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>

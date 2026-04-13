@@ -5,16 +5,20 @@
     --colour-link-text: #0000ff;
     --colour-link-click-text: #00008b;
     --colour-disclaimer-text: #a10202ec;
-    --colour-header-list-hover: #002b53;
+    --colour-header-list-hover: #215F9A;
+    --colour-logo-wiki: #215F9A;
+    --colour-logo-collagens: #002B53;
     --colour-button-hover: #d9dfe6ac;
     --colour-container-backgroud: #ecf2f8;
 
+    --logo-shadow: 1px 1px 1px #000000;
     --header-shadow: 1px 5px 5px 5px #0000001a;
     --footer-shadow: 10px 1px 5px 10px #0000001a;
     --container-shadow: 1px 1px 10px 10px #00000040;
 
     --font: "Barlow Semi Condensed", sans-serif;
 
+    --size-text-logo: 3rem;
     --size-text-page-header: 2.5rem;
     --size-text-header: 2rem;
     --size-text-m: 1.5rem;
@@ -48,7 +52,7 @@
 }
 
 body {
-    font-family: var(--font); /*Decide on final font*/
+    font-family: var(--font);
     background-color: var(--colour-background-primary);
     color: var(--colour-primary-text);
     min-height: 100vh;
@@ -76,23 +80,32 @@ header {
 div.header_brand {
     display: flex;
     justify-content: flex-start;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     font-size: var(--size-text-header);
 }
 
-img {
-    width: 110px;
-    height: 110px;
-    border-radius: 2.5px;
-    margin-right: 10px;
+h1.wiki {
+    color: var(--colour-logo-wiki);
+    font-size: var(--size-text-logo);
+    margin-left: 2px;
+    text-shadow: var(--logo-shadow);
+}
+
+h1.collagens {
+    color: var(--colour-logo-collagens);
+    font-size: var(--size-text-logo);
+    margin-left: 2px;
+    margin-bottom: 2px;
+    text-shadow: var(--logo-shadow);
 }
 
 /* navigation */
 nav {
     justify-content: center;
-    margin-left: 7%;
+    margin-left: auto;
     margin-right: auto;
+    transform: translateX(-125px); /* Shifts the navigation bar back 98px to the left to account for the width of the logo, allowing auto to be used */
 }
 
 .nav_list {

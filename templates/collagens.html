@@ -11,8 +11,8 @@
 
     <header>
         <div class="header_brand">
-            <img src="{{url_for('static', filename='images/logo.jpg') }}" alt="Wiki Collagens Logo">
-            <h4>Wiki<br/>Collagens</h4>
+            <h1 class="wiki">Wiki</h1>
+            <h1 class="collagens">Collagens</h1>
         </div>
         <nav>    
             <ul class="nav_list">
@@ -25,7 +25,7 @@
     </header>
 
     <main>
-        <h1 class="page_header">Results</h1>
+        <h1 class="page_header"> Results </h1>
         <p class="intro">
             Number of sequences uploaded: {{ seqs }}<br />
             Number of sequences with collagen sequences (min length 27 amino acids): {{ collagen_num }}
@@ -49,7 +49,8 @@
             <p class="intro">
                 You will lose access to these files within 1 hour of submitting.<br />
                 Please download any files you wish to keep.<br /><br />
-                Any gap characters (eg. -, * or ~) will have been removed from the sequences during processing.<br /><br />
+                Gap and terminal characters (eg. -, or *) will have been removed from the sequences during processing.<br />
+                Ambiguous characters (eg. ~, . or whitespace) will have been replaced with "X" from the sequences during processing.<br />
             </p>
     </main>
 

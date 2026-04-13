@@ -9,7 +9,7 @@ import os, uuid, time, shutil
 load_dotenv()
 
 app = Flask(__name__)
-cleanup_files("sessions", 1)
+cleanup_files("sessions", 3600)
 
 @app.route('/')
 @app.route('/home')
@@ -195,7 +195,7 @@ def contact():
 
 if __name__ == '__main__':
     # Run Flask development server
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    #app.run(debug=True, host='127.0.0.1', port=5000)
 
-    #Run Flask production server:
-    #serve(app, host=("0.0.0.0"), port=8000)
+    #Serve Flask production server:
+    serve(app, host=("0.0.0.0"), port=5000)

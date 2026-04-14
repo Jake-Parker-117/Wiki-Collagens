@@ -18,7 +18,7 @@ limitations under the License.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiki Collagens</title>
+    <title>Wiki Collagen</title>
     <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
 </head>
 
@@ -26,7 +26,7 @@ limitations under the License.
     <header>
         <div class="header_brand">
             <h1 class="wiki">Wiki</h1>
-            <h1 class="collagens">Collagens</h1>
+            <h1 class="collagens">Collagen</h1>
         </div>
         <nav>    
             <ul class="nav_list">
@@ -41,33 +41,33 @@ limitations under the License.
     <main>
         
         <div class="intro">
-            <h1 class="page_header">Automatic COL domain detector</h1>
+            <h1 class="page_header">Automatic collagen domain detector</h1>
             <p class="intro">
-                Wiki Collagens is a tool which, given fasta formatted protein sequences, will identify COL domain containing proteins 
-                and highlight their COL domains along with any interuptions.<br />
+                Wiki Collagen is a tool which, given fasta formatted protein sequences, will identify collagen domain containing proteins 
+                and highlight their collagen domains along with any interruptions.<br />
             </p>
         </div>
         
         <hr>
         
-        <form action="/collagens/file_input" method="POST" enctype="multipart/form-data">
+        <form action="/collagens/file_input" method="POST" enctype="multipart/form-data" onsubmit="replace_msg_file()">
             <div class="container">           
                 <h2 class="container_header_file_input">File Input</h2>   
                 <label for="fasta_File">Fasta file input:</label>
                 <input type="file" name="fasta_seqs" accept=".fasta,.fa,.faa,.txt" id="fasta_File" required>
                         
-                <label for="trip_len1">Minimum COL domain triplet length (in triplets):</label>
+                <label for="trip_len1">Minimum collagen domain triplet length (in triplets):</label>
                 <input type="number" name="col_len_min" title="Default = 10 triplets (ie. 30 amino acids)" value="10" id="trip_len1" required>                            
-                <label for="Max_GNG1">Maximum GNG interuption length:</label>
+                <label for="Max_GNG1">Maximum GNG interruption length:</label>
                 <input type="number" name="interruption_max" title="Default = 12 amino acids" value="12" id="Max_GNG1" required>
                         
-                <button type="submit">Find COL domains</button>
+                <button id="button_file" type="submit">Find collagen domains</button>
             </div>
         </form>
         
         <hr>
         
-        <form action="/collagens/text_input" method="POST">
+        <form action="/collagens/text_input" method="POST" onsubmit="replace_msg_text()">
             <div class="container">
                 <h2 class="container_header">Text Input</h2>
                 <p class="text_input">For large fasta files, please use the file input <br/> (450,000 Character limit)</p>
@@ -75,19 +75,36 @@ limitations under the License.
                 <label for="fasta_paste">Fasta sequences paste input:</label>
                 <textarea name="fasta_text" maxlength="450000" cols="60" rows="8" title="Fasta sequences input" placeholder="Paste fasta sequences here!" id="fasta_paste" required></textarea>
                 
-                <label for="trip_len2">Minimum COL domain triplet length (in triplets):</label>
+                <label for="trip_len2">Minimum collagen domain triplet length (in triplets):</label>
                 <input type="number" name="col_len_min" title="Default = 10 triplets (ie. 30 amino acids)" value="10" id="trip_len2" required>
                             
-                <label for="Max_GNG2">Maximum GNG interuption length:</label>
+                <label for="Max_GNG2">Maximum GNG interruption length:</label>
                 <input type="number" name="interruption_max" title="Default = 12 amino acids" value="12" id="Max_GNG2" required>
                             
-                <button type="submit">Find COL domains</button>
+                <button id="button_text" type="submit">Find collagen domains</button>
             </div>
         </form>
         <p class ="intro"><br />Please separate fasta headers and sequences with new line characters.<br /></p>
     
     </main>
     
-    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+    <footer>Wiki Collagen by Jordi Bella and Jacob Parker</footer>
+
+    <script>
+    function replace_msg_file() {
+        var x = document.getElementById("button_file");
+        x.disabled = true
+        x.innerHTML = "Processing...";
+        x.style.color = "#215F9A";
+    }
+    </script>
+    <script>
+    function replace_msg_text() {
+        var x = document.getElementById("button_text");
+        x.disabled = true
+        x.innerHTML = "Processing...";
+        x.style.color = "#215F9A";
+    }
+    </script>
 </body>
 </html>

@@ -18,7 +18,7 @@ limitations under the License.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiki Collagens</title>
+    <title>Wiki Collagen</title>
     <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet" />
 </head>
 
@@ -27,7 +27,7 @@ limitations under the License.
     <header>
         <div class="header_brand">
             <h1 class="wiki">Wiki</h1>
-            <h1 class="collagens">Collagens</h1>
+            <h1 class="collagens">Collagen</h1>
         </div>
         <nav>    
             <ul class="nav_list">
@@ -43,7 +43,7 @@ limitations under the License.
         <h1 class="page_header"> Results </h1>
         <p class="intro">
             Number of sequences uploaded: {{ seqs }}<br />
-            Number of sequences with collagen sequences (min length 27 amino acids): {{ collagen_num }}
+            Number of sequences with collagen domains: {{ collagen_num }}
         </p>
         <div class="container">
             <h2>Download Files</h2>
@@ -69,6 +69,6 @@ limitations under the License.
             </p>
     </main>
 
-    <footer>Wiki Collagens by Jordi Bella and Jacob Parker</footer>
+    <footer>Wiki Collagen by Jordi Bella and Jacob Parker</footer>
 </body>
 </html>

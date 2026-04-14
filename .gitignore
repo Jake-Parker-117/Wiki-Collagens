@@ -21,3 +21,5 @@ fastas
 RP1_1.py
 RP1_2.py
 fastas
+docker-compose.yml
+Dockerfile

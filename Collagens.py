@@ -32,7 +32,7 @@ def get_cols(fasta_file, col_txt, min_col_length=10):
     header = None
     new_line = [] #Using list and combining for time + memory efficiency
     sequence = ""
-    pattern = re.compile(rf'(G[A-Z][A-Z]){{{min_col_length},}}')
+    pattern = re.compile(rf'(?:G[^G][^G]){{{min_col_length},}}') #updated regex which excludes GGG repeats and GXG or GGY segments (see if Jodri thinks its a good idea)
     clean1 = re.compile(r'\n|\r|\t')
     clean2 = re.compile(r'\-|\*')
     replaceX = re.compile(r'\s|\~|\.') #compiling regexes for time efficiency
@@ -77,17 +77,17 @@ def get_cols(fasta_file, col_txt, min_col_length=10):
 
 def label_cols(col_file, hfile, table, num=12):
     """ 
-    Creates an html file with marked COL domains and interuptions within the given .txt file input.
-    Additionally creates a tsv file which contains statistics about GXY and interuption prevelance.
+    Creates an html file with marked COL domains and interruptions within the given .txt file input.
+    Additionally creates a tsv file which contains statistics about GXY and interruption prevelance.
 
     Args: 
     col_file = Inputted .txt file containing proteins with COL domains
-    hfile = html file outputted with highlighted COL domains + interuptons
-    table = tsv file output containing statistics about GXY and interuption prevelance
-    num = the maximum number of amino acids permitted to separate GXY repeats while still counting as a COL domain interuption
+    hfile = html file outputted with highlighted COL domains + interruptons
+    table = tsv file output containing statistics about GXY and interruption prevelance
+    num = the maximum number of amino acids permitted to separate GXY repeats while still counting as a COL domain interruption
     """
     
-    #Using regex to identify collagen regions, marking them and then finding interuptions and marking those
+    #Using regex to identify collagen regions, marking them and then finding interruptions and marking those
     with open(col_file) as fin:
         with open(hfile, 'w', encoding='utf-8') as fout:
             text = fin.read()
@@ -96,7 +96,7 @@ def label_cols(col_file, hfile, table, num=12):
             text = re.sub(r'(G[A-Z][A-Z]){2,}G[A-Z][A-Z]', r'</span><span class="COL">\g<0></span><span class="NC">', text)
             #Marking G0G interruptions
             text = re.sub(r'G(G.)</span><span class="NC">(.)</span><span class="COL">', r'</span><span class="GXG">G</span><span class="COL">\1\2', text)
-            #Marking G1G interuptions
+            #Marking G1G interruptions
             text = re.sub(r'(G.)G</span><span class="NC">(([A-Z]){2}</span><span class="COL">)',r'</span><span class="GXG">\1</span><span class="COL">G\2', text)
             #Marking G3-_G interruptions
             text = re.sub(rf'(G..)</span><span class="NC">(([A-Z]){{1,{num}}}</span><span class="COL">)', r'\1</span><span class="GNG">\2', text)
@@ -118,11 +118,11 @@ def label_cols(col_file, hfile, table, num=12):
                 elif t == '<span class="GXG">G<':
                     interruption_counter["G0G"] +=1
             with open(table, 'w') as t:
-                t.write(f"Interuptions within COL domains:\n")
+                t.write(f"Interruptions within COL domains:\n")
                 for k,v in interruption_counter.items():
                     t.write(f"{k}:\t{v},\t")
             
-            #Counting GXY triplets within COL domains
+            #Counting GXX' triplets within COL domains
             cols = ""
             filtered_text1 = re.findall(r'<span class="COL">((?:G..)+)</span>', text) #2nd parentheses around the GXY+ unit ensures only that unit is captured while matching the whole thing
             cols = "".join(filtered_text1)
@@ -140,7 +140,7 @@ def label_cols(col_file, hfile, table, num=12):
                 triplet_counter[k] =(v,(v/total_trips*100))
             #Creating a TSV containing the data from the dictionary
             with open(table, 'a', encoding='utf-8') as t:
-                t.write(f"\n\nGXY triplets in COL domains:\nGXY:\tTotal\t% of all GXYs\n")
+                t.write(f"\n\nGXX' triplets in COL domains:\nGXX':\tTotal\t% of all triplets\n")
                 for k,(v,p) in triplet_counter.items():
                     t.write(f"{k}:\t{v}\t{round(p, 3)}%\n")
             

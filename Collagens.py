@@ -188,4 +188,5 @@ def cleanup_files(folder="sessions", age_limit=3600):
         path = os.path.join(folder, session)
         age = now - os.path.getmtime(path)
         if age > age_limit:
-            shutil.rmtree(path)
+            if path != "sessions\\.gitkeep":
+                shutil.rmtree(path)

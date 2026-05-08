@@ -185,6 +185,9 @@ def cleanup_files(folder="sessions", age_limit=3600):
     """
     now = time.time()
     for session in os.listdir(folder):
+        if session == ".gitkeep":
+            continue
+        
         path = os.path.join(folder, session)
         age = now - os.path.getmtime(path)
         if age > age_limit:

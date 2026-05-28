@@ -31,9 +31,9 @@ limitations under the License.
         </div>
         <nav>    
             <ul class="nav_list">
-                <li><a aria-current="page">Home</a></li>
-                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
-                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a aria-current="page">Home</a></li>|
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>|
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>|
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>
             </ul>
         </nav>
@@ -74,7 +74,7 @@ limitations under the License.
                 <p class="text_input">For large fasta files, please use the file input <br/> (450,000 Character limit)</p>
                 
                 <label for="fasta_paste">Fasta sequences paste input:</label>
-                <textarea name="fasta_text" maxlength="450000" cols="60" rows="8" title="Fasta sequences input" placeholder="Paste fasta sequences here!" id="fasta_paste" required></textarea>
+                <textarea name="fasta_text" maxlength="450000" title="Fasta sequences input" placeholder="Paste fasta sequences here!" id="fasta_paste" required></textarea>
                 
                 <label for="trip_len2">Minimum collagen domain triplet length (in triplets):</label>
                 <input type="number" name="col_len_min" title="Default = 10 triplets (ie. 30 amino acids)" value="10" id="trip_len2" required>

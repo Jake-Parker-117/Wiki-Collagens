@@ -31,9 +31,9 @@ limitations under the License.
         </div>
         <nav>    
             <ul class="nav_list">
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a aria-current="page">Documentation</a></li>
-                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>|
+                <li><a aria-current="page">Documentation</a></li>|
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>|
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>
             </ul>
         </nav>
@@ -80,6 +80,7 @@ limitations under the License.
             </p>
             <p class="disclaimer">Disclaimers:</p>
             <ol class="documentation">
+                <li class="documentation">Privacy Notice: User information (eg. email, name, and private information) submitted via the contact form will be deleted within 1 month of submission. No user information is stored and all sequences are deleted after 1 hour. Please contact us if you have any questions.</li>
                 <li class="documentation">This tool is not designed to determine if the collagens, collagen-like proteins are helix forming or if they are true collagen domains but rather to recognise the collagen domain GXY pattern in amino acid sequeneces.</li>
                 <li class="documentation">Any gap characters (eg. -, * or ~) used to denote unknown amino acids will be removed from the sequences during processing.</li>
                 <li class="documentation">If fasta headers and sequences are not separated by a newline character (\n) the program will run on the header aswell as the sequence. It will also provide warnings in the output files for non-separated sequences, but will still provide a correct output.</li>

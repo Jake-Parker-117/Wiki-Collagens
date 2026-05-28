@@ -31,9 +31,9 @@ limitations under the License.
         </div>
         <nav>    
             <ul class="nav_list">
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>
-                <li><a href="{{ url_for('citation') }}">Citation</a></li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>|
+                <li><a href="{{ url_for('documentation') }}">Documentation</a></li>|
+                <li><a href="{{ url_for('citation') }}">Citation</a></li>|
                 <li><a aria-current="page">Contact</a></li>
             </ul>
         </nav>
@@ -54,8 +54,8 @@ limitations under the License.
                     <input type="text" name="contact_subject" id="subject" placeholder="Subject" required>
                     
                     <label for="message">Your message:</label>
-                    <textarea name="contact_message" cols="100" rows="10" id="message" placeholder="..." required></textarea>
-
+                    <textarea name="contact_message" cols="20" rows="10" id="message" placeholder="..." required></textarea>
+                    </br>
                     <button type="submit">Send Message</button>
                 </div>
         </form>
